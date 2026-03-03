@@ -1,0 +1,22 @@
+{
+  "name": "bigtimemoney",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Admin panel with live tracking and Telegram notifications",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "telegram": "node telegram-notify.js",
+    "dev": "node server.js & node telegram-notify.js"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "cors": "^2.8.6",
+    "dotenv": "^16.4.5",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "node-fetch": "^2.7.0",
+    "ws": "^8.16.0"
+  }
+}
