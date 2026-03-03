@@ -5,8 +5,11 @@
 $apiUrl = 'https://gte-production.up.railway.app/notify';
 
 // Store your secret in cPanel environment or a config file outside webroot and fetch it here
-$sharedSecret = getenv('API_SHARED_SECRET') ?: 'REPLACE_WITH_YOUR_SECRET';
-
+// prefer reading the secret from a central config file (outside webroot)
++$cfg = include __DIR__ . '/secrets.php';
++$sharedSecret = $cfg['api_shared_secret'] ?? getenv('API_SHARED_SECRET');
++// fallback if environment var exists (cron/environment may set it)
++
 $payload = [
     'type' => 'admin_panel_alive',
     'message' => "Admin panel reported alive from {$_SERVER['SERVER_NAME']}",
@@ -48,4 +51,7 @@ header('Content-Type: application/json');
 echo $response;
 
 // Usage: call this script from your admin login flow (server-side) or trigger via cron to validate connectivity.
++// If you have other PHP entrypoints that need the secret, include `secrets.php` the same way:
++//   $cfg = include __DIR__ . '/secrets.php';
++//   $sharedSecret = $cfg['api_shared_secret'];
 ?>
