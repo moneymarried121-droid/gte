@@ -2,7 +2,7 @@
 // cpanel_notify.php
 // Server-side example for cPanel: POST to your Node `/notify` endpoint using a shared secret.
 
-$apiUrl = 'https://coastcapitalsecurity.up.railway.app/notify';
+$apiUrl = 'https://gte-production.up.railway.app/notify';
 
 // Store your secret in cPanel environment or a config file outside webroot and fetch it here
 $sharedSecret = getenv('API_SHARED_SECRET') ?: 'REPLACE_WITH_YOUR_SECRET';
